@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adriana Fernandez</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <link rel="stylesheet" href="pk.css">
+</head>
+
+
+<body>
+    <div class="container-fluid">
+        <h1 class="mb-4">Querying the Pokemon API</h1>
+
+        <div class="d-flex justify-content-center">
+            <div class="alert alert-danger" role="alert" id="alerta" style="display: none;">
+                
+            </div>
+        </div>
+        
+        <div class="row justify-content-center mb-2">
+            <div class="col-5 col-sm-auto mb-2">
+                <label class="col-form-label" for="pkmName">Pokemon Name:</label>
+            </div>
+            <div class="col-7 col-sm-auto">
+                <input type="text" class="form-control" id="pkmName">
+            </div>
+            <div class="col-auto col-sm-auto">
+                <button id="add" class="btn btn-success">Add</button>
+            </div>
+        </div>
+
+        <div class="row center">
+            <p>Click on the name to delete it.</p>
+        </div>
+
+        <div class="d-flex justify-content-center mb-4">
+            <p class="weight">Total Weight: <span id="weight">0</span></p>
+        </div>
+
+        <div class="container">
+            <div class="row card-area row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5" id="card-area">
+                <template>
+                    <div class="col card-cont mb-4">
+                        <div class="card h-100">
+                            <h5 class="card-header">Featured</h5>
+                            <img class="card-img-top" alt="...">
+                            <div class="card-body">
+                                                            
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+
+    </div>
+</body>
+<script src="pk.js"></script>
+</html>
