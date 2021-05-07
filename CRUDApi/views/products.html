@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <title>All products</title>
+</head>
+<body>
+    <div>
+        <h1>All products</h1>
+        <button id="newProduct">Add new product</button>
+    </div>
+    <hr>
+
+
+    <table>
+        <tr>
+            <th>Product</th>
+            <th>Brand</th>
+            <th>Price per unit</th>
+        </tr>
+    </table>
+
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        var allProducts;
+        var table = document.querySelector("table");
+        var btnNew = document.getElementById("newProduct");
+
+        btnNew.addEventListener("click", (event) => {
+            window.location.replace(`http://localhost:3000/products/add`);
+        });
+
+        axios.get("http://localhost:3000/products")
+        .then(response => {
+            allProducts = response.data;
+            populateTable();
+        })
+        .catch(error => {
+            console.log(error.response);
+            alert("There was a problem retrieving the products' info.");
+        });
+
+        function populateTable() {
+            allProducts.forEach(product => {
+                let row = table.insertRow();
+                let cellProduct = row.insertCell();
+                let cellBrand = row.insertCell();
+                let cellPrice = row.insertCell();
+                let cellAction = row.insertCell();
+
+                cellProduct.innerText = product.name;
+                cellBrand.innerText = product.brand;
+                cellPrice.innerText = product.price.toFixed(2);
+
+                let btnEdit = document.createElement("button");
+                let btnDelete = document.createElement("button");
+
+                btnEdit.appendChild(document.createTextNode("Edit"));
+                btnDelete.appendChild(document.createTextNode("Delete"));
+
+                btnEdit.addEventListener("click", (event => {
+                    window.location.replace(`http://localhost:3000/products/${product._id}/edit`);
+                }));
+
+                btnDelete.addEventListener("click", (event) => {
+                    if (confirm("Are you sure you want to delete the product?")) {
+                        axios.delete(`http://localhost:3000/products/${product._id}`)
+                        .then(response => {
+                            row.parentNode.removeChild(row);
+                            alert("Product deleted succesfully.");
+                        })
+                        .catch(error => {
+                            console.log(error.response);
+                            alert("There was a problem deleting the product.")
+                        });
+                    }
+                });
+
+                cellAction.appendChild(btnEdit);
+                cellAction.appendChild(btnDelete);
+            });
+        }
+
+    </script>
+</body>
+</html>
