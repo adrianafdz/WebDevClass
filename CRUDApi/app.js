@@ -8,6 +8,7 @@ const mongoose = require("mongoose");
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(cors());
+app.use(express.static('./views'));
 
 const uri = "mongodb+srv://webapp:labs@cluster0.ud4pu.mongodb.net/WebClass?retryWrites=true&w=majority";
 mongoose.connect(uri, {useUnifiedTopology: true, useNewUrlParser: true });
@@ -64,11 +65,16 @@ app.post('/products', (req, res) => {
     let brand = req.body.brand;
     let price = req.body.price;
 
-    let product = new productModel({
-        name: name,
-        brand: brand,
-        price: parseFloat(price)
-    });
+    let product = new productModel();
+
+    if (brand) {
+        product.name = name;
+        product.brand = brand;
+        product.price = price;
+    } else {
+        product.name = name;
+        product.price = price;
+    }
 
     product.save((error) => {
         if (error) {
