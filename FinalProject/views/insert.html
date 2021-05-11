@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+    <link rel="stylesheet" href="/styles.css">
+    <title>New Product</title>
+</head>
+<body>
+    <div class="title container-fluid pt-2 pb-2 pb-2 ps-4 pe-4">
+        <h1>Add a new product</h1>
+    </div>
+    <hr class="my-0">
+
+    <div class="container container-form">
+        <div id="alert" class="alert alert-danger alert-dismissible" style="display: none;">
+            <p id="alertMsg"></p>
+            <button type="button" id="close" class="btn-close"></button>
+        </div>
+        <form>
+            <div class="mb-3">
+                <label for="prodName" class="form-label">Name: </label>
+                <input type="text" id="prodName" class="form-control" autocomplete="nope">
+            </div>
+
+            <div class="mb-3">
+                <label for="prodBrand" class="form-label">Brand: </label>
+                <input type="text" id="prodBrand" class="form-control" autocomplete="off">
+            </div>
+
+            <div class="mb-4">
+                <label for="prodPrice" class="form-label">Price: </label>
+                <input type="text" id="prodPrice" class="form-control" autocomplete="off">
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <a class="btn btn-link" href='http://localhost:3000/products/all'>Cancel</a>
+                <input type="submit" id="submit" value="Add" class="btn btn-outline-success">
+            </div>
+        </form>
+    </div>
+
+    <div class="container-fluid footer">
+        <p>Adriana Fernández A01197148</p>
+    </div>
+
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        const alerta = document.getElementById("alert");
+        const alertMsg = document.getElementById("alertMsg");
+        const alertBtn = document.getElementById("close");
+
+        alertBtn.addEventListener("click", (event) => {
+            alerta.style.display = "none";
+        });
+
+        const nameInput = document.getElementById("prodName");
+        const brandInput = document.getElementById("prodBrand");
+        const priceInput = document.getElementById("prodPrice");
+        const btnSubmit = document.getElementById("submit");
+
+        btnSubmit.addEventListener("click", (event) => {
+            event.preventDefault();
+            
+            let name = nameInput.value.trim();
+            let brand = brandInput.value.trim();
+            let price = priceInput.value.trim();
+
+            if (name == "") {
+                alertMsg.innerText = "Name is required";
+                alerta.style.display = "";
+                return;
+            }
+
+            if (price == "") {
+                alertMsg.innerText = "Price is required";
+                alerta.style.display = "";
+                return;
+            }
+
+            if (isNaN(price)) {
+                alertMsg.innerText = "The price should be a number.";
+                alerta.style.display = "";
+                return;
+            } else {
+                price = parseFloat(price);
+            }
+
+            if (price <= 0) {
+                alertMsg.innerText = "The price should be greater than 0.";
+                alerta.style.display = "";
+                return;
+            }
+
+            const formData = {
+                name: name,
+                brand: brand,
+                price: parseFloat(price)
+            }
+
+            axios.post("http://localhost:3000/products", formData)
+            .then(response => {
+                alert("Product added successfully.");
+                window.location.replace('http://localhost:3000/products/all');
+            })
+            .catch(error => {
+                console.log(error);
+                alert("There was a problem adding the product.");
+            });
+
+        });
+
+    </script>
+</body>
+</html>
