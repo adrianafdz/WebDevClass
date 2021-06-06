@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+    <link rel="stylesheet" href="/styles.css">
+    <title>Sign up</title>
+</head>
+<body class="general">   
+    <nav class="navbar navbar-dark bg-dark fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Sign up</a>
+        </div>
+    </nav>
+
+    <div class="container container-form">
+        <div id="alert" class="alert alert-danger alert-dismissible" style="display: none;">
+            <p id="alertMsg"></p>
+            <button type="button" id="close" class="btn-close"></button>
+        </div>
+        <form>
+            <div class="mb-3">
+                <label for="name" class="form-label">Name: </label>
+                <input type="text" id="name" class="form-control" autocomplete="off" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="email" class="form-label">E-mail: </label>
+                <input type="email" id="email" class="form-control" autocomplete="off" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="avatar" class="form-label">Avatar: </label>
+                <input class="form-control" type="file" id="avatar" accept="image/*" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="password" class="form-label">Password: </label>
+                <input type="password" id="password" class="form-control" autocomplete="new-password" required>
+            </div>
+
+            <div class="mb-4">
+                <label for="confirm" class="form-label">Confirm password: </label>
+                <input type="password" id="confirm" class="form-control" required>
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <a class="btn btn-link" href='http://localhost:3000/login'>Cancel</a>
+                <input type="submit" id="submit" value="Sign up" class="btn btn-outline-success">
+            </div>
+        </form>
+    </div>
+
+    <div class="container-fluid footer">
+        <p>Adriana Fernández A01197148</p>
+    </div>
+
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        const alerta = document.getElementById("alert");
+        const alertMsg = document.getElementById("alertMsg");
+        const alertBtn = document.getElementById("close");
+
+        alertBtn.addEventListener("click", (event) => {
+            alerta.style.display = "none";
+        });
+
+        const nameInput = document.getElementById("name");
+        const emailInput = document.getElementById("email");
+        const avatarImage = document.getElementById("avatar");
+        const pswd = document.getElementById("password");
+        const pswdConfirm = document.getElementById("confirm");
+        const btnSubmit = document.getElementById("submit");
+
+        btnSubmit.addEventListener("click", (event) => {
+            event.preventDefault();
+            
+            let name = nameInput.value.trim();
+            let email = emailInput.value.trim();
+            let avatar = avatarImage.files[0];
+            let pass = pswd.value;
+            let conf = pswdConfirm.value;
+
+            if (name == "" || pass == "" || conf == "" || email == "") {
+                alertMsg.innerText = "All fields are required";
+                alerta.style.display = "";
+                return;
+            }
+
+            if (pass !== conf) {
+                alertMsg.innerText = "Passwords do not match";
+                alerta.style.display = "";
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('name', name);
+            formData.append('email', email);
+            formData.append('password', pass);
+            formData.append('avatar', avatar)
+
+            axios.post("http://localhost:3000/signup", formData)
+            .then(response => {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Account created',
+                    text: 'Please log in with your new credentials',
+                    showCancelButton: false,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Great!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.replace('http://localhost:3000/login');
+                    }
+                })
+            })
+            .catch(error => {
+                console.log(error);
+                alertMsg.innerText = "There was a problem signing up. Please try again later.";
+                alerta.style.display = "";
+                return;
+            });
+
+        });
+
+    </script>
+</body>
+</html>
